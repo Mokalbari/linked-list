@@ -83,6 +83,47 @@ export function createLinkedList() {
     return data
   }
 
+  const contains = (value) => {
+    if (isEmpty()) return false
+    let currentNode = head
+    if (currentNode.data === value) return true
+    while (currentNode !== null) {
+      if (currentNode.data === value) {
+        return true
+      } else {
+        currentNode = currentNode.next
+      }
+    }
+    return false
+  }
+
+  const find = (value) => {
+    let currentIndex = 0
+    let currentNode = head
+    if (currentNode.data === value) return currentIndex
+    while (currentNode !== null) {
+      if (currentNode.data === value) {
+        return true
+      } else {
+        currentNode = currentNode.next
+        currentIndex++
+      }
+    }
+    return -1
+  }
+
+  const toString = () => {
+    if (isEmpty()) return "null"
+    let output = ""
+    let currentNode = head
+    while (currentNode !== null) {
+      output += `(${currentNode.data}) -> `
+      currentNode = currentNode.next
+    }
+    output += "null"
+    return output
+  }
+
   return {
     isEmpty,
     setFirst,
@@ -92,5 +133,8 @@ export function createLinkedList() {
     getSize,
     getDataAtIndex,
     pop,
+    contains,
+    find,
+    toString,
   }
 }
