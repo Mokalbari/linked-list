@@ -1,37 +1,35 @@
-import { createNode } from "./create-node.js"
+import { createNode } from "./create-node.ts"
+import type { Node } from "./types.ts"
 
-export function createLinkedList() {
-  let head = null
+export function createLinkedList<T>() {
+  let head: Node<T> | null = null
 
-  const isEmpty = () => head === null
+  const isEmpty = (): boolean => head === null
 
-  const addFirst = (value) => {
+  const addFirst = (value: T): void => {
     head = createNode(value, head)
   }
 
-  const getHead = () => {
-    if (isEmpty()) return null
+  const getHead = (): T | null => {
+    if (!head) return null
     return head.data
   }
 
-  const addLast = (value) => {
+  const addLast = (value: T): void => {
     const newNode = createNode(value)
-
-    if (isEmpty()) {
+    if (!head) {
       head = newNode
+      return
     }
-
     let currentNode = head
-
     while (currentNode.next !== null) {
       currentNode = currentNode.next
     }
     currentNode.next = newNode
   }
 
-  const getTail = () => {
-    if (isEmpty()) return null
-
+  const getTail = (): T | null => {
+    if (!head) return null
     let currentNode = head
     while (currentNode.next !== null) {
       currentNode = currentNode.next
@@ -39,11 +37,10 @@ export function createLinkedList() {
     return currentNode.data
   }
 
-  const getSize = () => {
+  const getSize = (): number => {
     let size = 0
-    if (isEmpty()) return size
-
-    let currentNode = head
+    if (!head) return size
+    let currentNode: Node<T> | null = head
     while (currentNode !== null) {
       size++
       currentNode = currentNode.next
@@ -51,68 +48,64 @@ export function createLinkedList() {
     return size
   }
 
-  const getDataAtIndex = (index) => {
-    let currentIndex = 0
-    if (isEmpty()) return null
+  const getDataAtIndex = (index: number): T | null => {
+    if (!head || index < 0) return null
 
-    let currentNode = head
-    while (currentIndex < index) {
+    let currentNode: Node<T> | null = head
+    let currentIndex = 0
+
+    while (currentNode !== null) {
       if (currentIndex === index) return currentNode.data
       currentNode = currentNode.next
       currentIndex++
     }
+
     return null
   }
 
-  const pop = () => {
-    if (isEmpty()) return null
-
-    if (head.next === null) {
+  const pop = (): T | null => {
+    if (!head) return null
+    if (!head.next) {
       const data = head.data
       head = null
       return data
     }
-
     let currentNode = head
-    while (currentNode.next.next !== null) {
-      currentNode = currentNode.next
+    while (currentNode.next?.next !== null) {
+      currentNode = currentNode.next!
     }
-
+    if (!currentNode.next) return null
     const data = currentNode.next.data
     currentNode.next = null
     return data
   }
 
-  const contains = (value) => {
+  const contains = (value: T): boolean => {
     if (isEmpty()) return false
     let currentNode = head
-    if (currentNode.data === value) return true
     while (currentNode !== null) {
       if (currentNode.data === value) {
         return true
-      } else {
-        currentNode = currentNode.next
       }
+      currentNode = currentNode.next
     }
     return false
   }
 
-  const find = (value) => {
+  const find = (value: T): number => {
     let currentIndex = 0
     let currentNode = head
-    if (currentNode.data === value) return currentIndex
     while (currentNode !== null) {
       if (currentNode.data === value) {
-        return true
-      } else {
-        currentNode = currentNode.next
-        currentIndex++
+        return currentIndex
       }
+      currentNode = currentNode.next
+      currentIndex++
     }
     return -1
   }
 
-  const toString = () => {
+  const toString = (): string => {
     if (isEmpty()) return "null"
     let output = ""
     let currentNode = head
